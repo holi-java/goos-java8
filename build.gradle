@@ -18,10 +18,19 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven {
+        name = "jenkins-ci"
+        url = "http://repo.jenkins-ci.org/releases/"
+    }
 }
 
 dependencies {
+    compile 'jivesoftware:smack:3.2.1'
+    compile 'jivesoftware:smackx:3.2.1'
+
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M3'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
+    testCompile 'com.googlecode.windowlicker:windowlicker-swing:r268'
 
     testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.0-M3'
     testRuntime 'org.junit.platform:junit-platform-console:1.0.0-M3'

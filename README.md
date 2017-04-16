@@ -39,6 +39,11 @@ Growing Object-Oriented Software by Test Driven Development.
 - The automation of **build**, **packaging** and **deploying** into production like environment will flush out all sorts of technical and organizational questions.
 
 
+## A Minimal Fake Implementation
+
+the fake is a minimal implementation just supports **testing**.
+
+
 ## Iteration Zero
 
 In most agile projects, there's a first step where the team doing **initial analysis**, setting up its physical and technical environment, and otherwise getting started.
@@ -56,3 +61,9 @@ Working backwards from the test helps us focusing on **what** the system want to
 ## One Domain at a time
 
 Keeping the language **consistent** helps us to understand what's significant in the test, with a nice side effect to protecting us when the implementation inevitably changes. 
+
+
+## How to pass a failing Test?
+
+- adding functionality, a **tiny** slice at a time, until eventually make the test pass, following this approach that make our progress was much more **predictable**. focusing on just **one aspect** at a time helps us to make sure we understand it.
+- writing a small amount of **ugly** code and seeing **how** it fails out, it helps us to **test** our ideas before we've gone too far.   
