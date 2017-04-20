@@ -1,5 +1,6 @@
 package auctionsniper;
 
+import org.hamcrest.Matcher;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 
@@ -7,11 +8,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static auctionsniper.Main.AUCTION_RESOURCE;
-import static auctionsniper.Main.ITEM_ID_AS_LOGIN;
+import static auctionsniper.Main.*;
+import static java.lang.String.format;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Created by holi on 4/17/17.
@@ -47,15 +47,28 @@ public class FakeAuctionServer {
     }
 
     private String auctionId() {
-        return String.format(ITEM_ID_AS_LOGIN, getItemId());
+        return format(ITEM_ID_AS_LOGIN, getItemId());
     }
 
-    public void hasReceivedJoiningRequestFromSniper() throws InterruptedException {
-        messageListener.receivesAMessage();
+    public void reportPrice(int price, int increment, String bidder) throws XMPPException {
+        currentChat.sendMessage(format("SOLVersion: 1.1; Event: PRICE; CurrentPrice: %d; Increment: %d; Bidder: %s;", price, increment, bidder));
+    }
+
+    public void hasReceivedJoiningRequestFrom(String sniperId) throws InterruptedException {
+        receivesAMessageMatching(sniperId, equalTo(JOIN_COMMAND_FORMAT));
+    }
+
+    public void hasReceivedBid(int bid, String sniperId) throws InterruptedException {
+        receivesAMessageMatching(sniperId, equalTo(format(BID_COMMAND_FORMAT, bid)));
+    }
+
+    private void receivesAMessageMatching(String sniperId, Matcher<String> messageBodyMatcher) throws InterruptedException {
+        messageListener.receivesAMessage(messageBodyMatcher);
+        assertThat(currentChat.getParticipant(), equalTo(sniperId));
     }
 
     public void announceClosed() throws XMPPException {
-        currentChat.sendMessage(new Message());
+        currentChat.sendMessage("SOLVersion: 1.1; Event: CLOSE;");
     }
 
     public void stop() {
@@ -70,8 +83,10 @@ public class FakeAuctionServer {
             messages.add(message);
         }
 
-        public void receivesAMessage() throws InterruptedException {
-            assertThat("incoming message", messages.poll(1, TimeUnit.SECONDS), is(notNullValue()));
+        public void receivesAMessage(Matcher<String> messageBodyMatcher) throws InterruptedException {
+            Message received = messages.poll(1, TimeUnit.SECONDS);
+            assertThat("message", received, is(notNullValue()));
+            assertThat("message body", received, hasProperty("body", messageBodyMatcher));
         }
     }
 }

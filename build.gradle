@@ -29,6 +29,7 @@ dependencies {
     compile 'jivesoftware:smackx:3.2.1'
 
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.0.0-M3'
+    testCompile 'org.jmock:jmock:2.8.2'
     testCompile 'org.hamcrest:hamcrest-all:1.3'
     testCompile 'com.googlecode.windowlicker:windowlicker-swing:r268'
 

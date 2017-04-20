@@ -66,4 +66,19 @@ Keeping the language **consistent** helps us to understand what's significant in
 ## How to pass a failing Test?
 
 - adding functionality, a **tiny** slice at a time, until eventually make the test pass, following this approach that make our progress was much more **predictable**. focusing on just **one aspect** at a time helps us to make sure we understand it.
-- writing a small amount of **ugly** code and seeing **how** it fails out, it helps us to **test** our ideas before we've gone too far.   
+- writing a small amount of **ugly** code and seeing **how** it fails out, it helps us to **test** our ideas before we've gone too far.
+   
+   
+## Maintaining the Test-Driven Cycle
+
+Using acceptance test to show **incremental** progress. 
+Each acceptance test should have just enough requirements to force a manageable increase in functionality.
+
+
+## Outside-In Development
+
+TDD is to start with the **outside event** that triggers the **behavior** we want to implement and work our way into the code **an object** at a time, until we reach a **visible effect**.
+
+Entry Point is **the event** that triggers the next round of **behavior** we want to work.
+  
+Introduce a single feature to a **separated class** that it is been discovered by writing a unit-test, and **replacing** with it in system as soon as possible to make the system more **simpler** when the unit-test pass.      
