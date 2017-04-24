@@ -8,48 +8,88 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static auctionsniper.AuctionEventListener.PriceSource.FromOtherBidder;
+import static auctionsniper.AuctionEventListener.PriceSource.FromSniper;
 import static java.util.stream.Collectors.toMap;
 
 /**
  * Created by holi on 4/18/17.
  */
 public class AuctionMessageTranslator implements MessageListener {
+    public static final String CLOSE_EVENT = "CLOSE";
+    public static final String CURRENT_PRICE_EVENT = "PRICE";
+    private String sniperId;
     private AuctionEventListener listener;
 
-    public AuctionMessageTranslator(AuctionEventListener listener) {
+    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener) {
+        this.sniperId = sniperId;
         this.listener = listener;
     }
 
     @Override
     public void processMessage(Chat chat, Message message) {
-        Map<String, String> event = unpackEventFrom(message);
-        String type = event.get("Event");
-        if ("CLOSE".equals(type)) {
+        AuctionEvent event = AuctionEvent.from(message.getBody());
+        String type = event.type();
+        if (CLOSE_EVENT.equals(type)) {
             listener.auctionClosed();
-        } else if ("PRICE".equals(type)) {
-            listener.currentPrice(Integer.parseInt(event.get("CurrentPrice"))
-                    , Integer.parseInt(event.get("Increment")));
+        } else if (CURRENT_PRICE_EVENT.equals(type)) {
+            listener.currentPrice(event.currentPrice(), event.increment(), event.isFrom(sniperId));
         }
     }
 
-    private Map<String, String> unpackEventFrom(Message message) {
-        return fields(message.getBody()).collect(toMap(this::fieldName, this::fieldValue));
-    }
+    private static class AuctionEvent {
+        private Map<String, String> fields;
 
-    private Stream<String[]> fields(String body) {
-        return Arrays.stream(body.split(";")).map(this::field);
-    }
+        public AuctionEvent(Map<String, String> fields) {
+            this.fields = fields;
+        }
 
-    private String[] field(String it) {
-        return it.split(":");
-    }
+        private static AuctionEvent from(String body) {
+            return new AuctionEvent(fieldsIn(body).collect(toMap(AuctionEvent::fieldName, AuctionEvent::fieldValue)));
+        }
 
-    private String fieldName(String[] field) {
-        return field[0].trim();
-    }
+        private static Stream<String[]> fieldsIn(String body) {
+            return Arrays.stream(body.split(";")).map(AuctionEvent::field);
+        }
 
-    private String fieldValue(String[] field) {
-        return field[1].trim();
-    }
+        private static String[] field(String it) {
+            return it.split(":");
+        }
 
+        private static String fieldName(String[] field) {
+            return field[0].trim();
+        }
+
+        private static String fieldValue(String[] field) {
+            return field[1].trim();
+        }
+
+        public String type() {
+            return get("Event");
+        }
+
+        public int currentPrice() {
+            return getInt("CurrentPrice");
+        }
+
+        public int increment() {
+            return getInt("Increment");
+        }
+
+        private String bidder() {
+            return get("Bidder");
+        }
+
+        private AuctionEventListener.PriceSource isFrom(String sniperId) {
+            return sniperId.equals(bidder()) ? FromSniper : FromOtherBidder;
+        }
+
+        private int getInt(String fieldName) {
+            return Integer.parseInt(get(fieldName));
+        }
+
+        private String get(String fieldName) {
+            return fields.get(fieldName);
+        }
+    }
 }

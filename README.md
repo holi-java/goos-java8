@@ -7,6 +7,7 @@ Growing Object-Oriented Software by Test Driven Development.
 
 - Learning Test Driven Software Development.
    - judging **where** to set the boundaries of **what** to test.
+   - **how** to fine-grained development steps.
    - **how** to eventually cover everything.  
 - Where we having to backtrack on decisions that turn out to be wrong.
 - Learning to make substantial changes to the code in small, safe steps.
@@ -81,4 +82,17 @@ TDD is to start with the **outside event** that triggers the **behavior** we wan
 
 Entry Point is **the event** that triggers the next round of **behavior** we want to work.
   
-Introduce a single feature to a **separated class** that it is been discovered by writing a unit-test, and **replacing** with it in system as soon as possible to make the system more **simpler** when the unit-test pass.      
+Introduce a single feature to a **separated class** that it is been discovered by writing a unit-test, and **replacing** with it in system as soon as possible to make the system more **simpler** when the unit-test pass.
+      
+      
+      
+## Effectiveness of Single Responsibility Principle
+
+Single Responsibility Principle is very **effective heuristic** for breaking up the complexity.
+ 
+ 
+## Defer Decisions
+ 
+Defer Decisions help us focus on the **immediate task** without getting dragged into thinking about the next significant chunk functionality.
+ 
+ 

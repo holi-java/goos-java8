@@ -13,8 +13,10 @@ public class MainWindow extends JFrame {
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
     public static final String SNIPER_STATUS_NAME = "Sniper Status";
     public static final String STATUS_JOINING = "JOINING";
-    public static final String STATUS_LOST = "LOST";
     public static final String STATUS_BIDDING = "BIDDING";
+    public static final String STATUS_WINNING = "WINNING";
+    public static final String STATUS_WON = "WON";
+    public static final String STATUS_LOST = "LOST";
     private JLabel sniperStatus = createSniperStatus(STATUS_JOINING);
 
     public MainWindow() throws HeadlessException {

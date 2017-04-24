@@ -44,3 +44,7 @@ idea {
         excludeDirs += ['.idea', '.gradle'].collect { file(it) };
     }
 }
+
+configurations.all {
+    exclude group: 'junit'
+}

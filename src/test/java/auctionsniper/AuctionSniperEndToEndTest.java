@@ -40,6 +40,25 @@ public class AuctionSniperEndToEndTest {
     }
 
 
+    @Test
+    void sniperWinsAnAuctionByBiddingHigher() throws Throwable {
+        auction.startSellingItem();
+
+        application.startBiddingIn(auction);
+        auction.hasReceivedJoiningRequestFrom(SNIPER_XMPP_ID);
+
+        auction.reportPrice(1000, 98, "other bidder");
+        application.hasShownSniperIsBidding();
+        auction.hasReceivedBid(1098, SNIPER_XMPP_ID);
+
+        auction.reportPrice(1098, 100, SNIPER_XMPP_ID);
+        application.hasShownSniperIsWinning();
+
+        auction.announceClosed();
+        application.showsSniperHasWonAuction();
+    }
+
+
     @AfterEach
     void stopAuction() throws Throwable {
         auction.stop();
